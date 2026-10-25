@@ -1,0 +1,432 @@
+.page {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  background: #f0f3f8;
+}
+
+.titleSection,
+.storySection,
+.characterSection,
+.introductionSection,
+.episodesSection,
+.snsSection {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding-inline: max(20px, env(safe-area-inset-left))
+    max(20px, env(safe-area-inset-right));
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.illustration {
+  display: block;
+  width: 100%;
+  max-width: 48rem;
+  height: auto;
+  flex-shrink: 0;
+  margin: auto;
+}
+
+.header {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: max(20px, env(safe-area-inset-right));
+  left: max(20px, env(safe-area-inset-left));
+  max-width: 48rem;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: calc(100px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  pointer-events: none;
+}
+
+.menu {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 44px;
+  object-fit: contain;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: calc(100px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.storySection {
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(100px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+
+
+.storyText {
+  margin: auto 0;
+  color: #1c3161;
+  font-family: "Hiragino Mincho Pro", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: clamp(8px, 2.9vw, 16px);
+  font-weight: 400;
+  line-height: 2;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    scroll-behavior: auto;
+  }
+}
+
+.characterSection {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  padding-top: calc(100px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.characterContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+
+
+.characterStage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 0;
+}
+
+.characterImage {
+  object-position: center;
+  transform: scale(0.9);
+  transform-origin: center;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.headingFrame {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  aspect-ratio: 3438 / 775;
+  margin-bottom: 50px;
+}
+
+.sectionHeading {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.introductionSection {
+  padding-top: calc(100px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.introductionContent {
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.characterTrack {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.characterTrack::-webkit-scrollbar { display: none; }
+
+.characterSlide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.carouselBar {
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(160px, 50%);
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: pan-x;
+}
+.carouselBar::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: #1c316126; }
+.carouselBar::-webkit-slider-thumb { appearance: none; width: 48px; height: 4px; border-radius: 2px; background: #1c3161; }
+.carouselBar::-moz-range-track { height: 4px; border-radius: 2px; background: #1c316126; }
+.carouselBar::-moz-range-thumb { width: 48px; height: 4px; border: 0; border-radius: 2px; background: #1c3161; }
+.carouselBar:focus-visible, .characterTrack:focus-visible { outline: 2px solid #1c3161; outline-offset: 2px; }
+
+
+.episodesSection {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  padding-top: calc(100px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.episodesContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.episodeViewport {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.08) 2%, rgb(0 0 0 / 0.28) 5%, rgb(0 0 0 / 0.55) 8%, rgb(0 0 0 / 0.8) 11%, rgb(0 0 0 / 0.95) 14%, #000 17%, #000 83%, rgb(0 0 0 / 0.95) 86%, rgb(0 0 0 / 0.8) 89%, rgb(0 0 0 / 0.55) 92%, rgb(0 0 0 / 0.28) 95%, rgb(0 0 0 / 0.08) 98%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgb(0 0 0 / 0.08) 2%, rgb(0 0 0 / 0.28) 5%, rgb(0 0 0 / 0.55) 8%, rgb(0 0 0 / 0.8) 11%, rgb(0 0 0 / 0.95) 14%, #000 17%, #000 83%, rgb(0 0 0 / 0.95) 86%, rgb(0 0 0 / 0.8) 89%, rgb(0 0 0 / 0.55) 92%, rgb(0 0 0 / 0.28) 95%, rgb(0 0 0 / 0.08) 98%, transparent 100%);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+.episodeViewport::-webkit-scrollbar { display: none; }
+.episodeViewport:focus-visible { outline: 2px solid #1c3161; outline-offset: 3px; }
+.episodeButtons { display: flex; flex-direction: column; gap: 20px; }
+.episodeButton {
+  display: block;
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  opacity: 1;
+}
+.episodeButton img { display: block; width: 100%; height: auto; }
+
+.snsSection {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding-top: calc(100px + env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.snsContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.snsBody { display: grid; place-items: center; flex: 1; }
+.instagramLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 40px;
+  border: 0;
+  color: #1c3161;
+  font-family: "Hiragino Mincho Pro", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  text-decoration: none;
+}
+.instagramLabel { font-size: 24px; }
+.instagramLink:hover { background: rgb(28 49 97 / 0.06); }
+.instagramLink:focus-visible { outline: 2px solid #1c3161; outline-offset: 5px; }
+
+/* 最後のSNSセクションに付くフッターだけを着色する。 */
+.snsSection {
+  position: relative;
+}
+
+.snsSection::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc(100px + env(safe-area-inset-bottom));
+  background: #1e3060;
+  pointer-events: none;
+}
+
+.instagramQr { display: block; width: min(220px, 52vw); height: auto; }
+
+.snsCopyright {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  color: #fff;
+  font-family: "Hiragino Mincho Pro", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 13px;
+}
+
+.menuDialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: calc(100px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom));
+  border: 0;
+  background: transparent;
+  overflow-y: auto;
+}
+.menuDialog[open] { display: grid; place-items: center; }
+.menuDialog::backdrop { background: #1e3060; }
+.menuDialogHeader {
+  position: absolute;
+  top: 0;
+  right: max(20px, env(safe-area-inset-right));
+  left: max(20px, env(safe-area-inset-left));
+  max-width: 48rem;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: calc(100px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  pointer-events: none;
+}
+.menuDialogHeader .menu { pointer-events: auto; }
+.menuItems { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 48rem; container-type: inline-size; }
+.menuItem {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: min(22.5422cqw, 14svh);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.menuItem img { display: block; width: auto; max-width: 100%; height: 100%; margin-inline: auto; object-fit: contain; }
+.menuItem:focus-visible, .menu:focus-visible { outline: 2px solid white; outline-offset: 4px; }
+.page:has(.menuDialog[open]) { overflow: hidden; }
+
+@keyframes menuBackdropEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menuItemsEnter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menuDialog[open]::backdrop { animation: menuBackdropEnter 0.4s ease-out both; }
+.menuDialog[open] .menuItems { animation: menuItemsEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.menuDialog[open] .menuDialogHeader { animation: menuBackdropEnter 0.35s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .menuDialog[open]::backdrop,
+  .menuDialog[open] .menuItems,
+  .menuDialog[open] .menuDialogHeader { animation: none; }
+}
+
+@keyframes menuBackdropExit {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes menuItemsExit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(14px); }
+}
+.menuDialog[open][data-closing="true"]::backdrop { animation: menuBackdropExit 0.4s ease-in-out both; }
+.menuDialog[open][data-closing="true"] .menuItems { animation: menuItemsExit 0.35s ease-in-out both; pointer-events: none; }
+.menuDialog[open][data-closing="true"] .menuDialogHeader { animation: menuBackdropExit 0.35s ease-in-out both; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .menuDialog[open][data-closing="true"]::backdrop,
+  .menuDialog[open][data-closing="true"] .menuItems,
+  .menuDialog[open][data-closing="true"] .menuDialogHeader { animation: none; }
+}
+
+/* top layerのdialogは親の固定要素基準を継承しないため幅を直接指定。 */
+.menuDialog {
+  width: min(100%, 430px);
+  margin-inline: auto;
+  background: #1e3060;
+}
+.menuDialog::backdrop {
+  background: linear-gradient(to right,
+    #fff 0 calc((100% - min(100%, 430px)) / 2),
+    #1e3060 calc((100% - min(100%, 430px)) / 2) calc((100% + min(100%, 430px)) / 2),
+    #fff calc((100% + min(100%, 430px)) / 2) 100%);
+}
+.storyText { font-size: clamp(8px, min(2.9vw, 12.47px), 16px); }
+.instagramQr { width: min(220px, 52vw, 223.6px); }

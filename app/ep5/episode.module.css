@@ -1,0 +1,16 @@
+.reverse:global(.scene-background-image) { animation-name: slide-right; }
+@keyframes slide-right { from { transform: translateX(-12px); } to { transform: translateX(0); } }
+.leaving:global(.character-image) { animation: fade-out 0.5s ease-in-out both; }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+ .reverse:global(.scene-background-image) { animation: none; transform: translateX(0); }
+ .leaving:global(.character-image) { animation: none; opacity: 0; }
+}
+
+.portrait:global(.character-image) { transform: translateY(340px) scale(1.575); }
+
+.noPan:global(.scene-background-image) { animation: none; transform: translateX(0); }
+.locationSlide { display: contents; }
+.locationSlide :global(.location-label) { animation: place-fade 2s ease-in-out both, slide-right 2s ease-in-out both; }
+@keyframes place-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .locationSlide :global(.location-label) { animation: none; } }

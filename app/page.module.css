@@ -1,0 +1,30 @@
+.loadingScreen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #1c3062;
+}
+
+.loadingImage {
+  display: block;
+  width: 109px;
+  height: auto;
+  max-width: 100%;
+}
+
+.entryCurtain {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  pointer-events: auto;
+}
+.curtainClose { animation: entryDarken 1.5s ease-in-out both; }
+.curtainOpen { animation: entryReveal 1.5s ease-in-out both; }
+@keyframes entryDarken { from { opacity: 0; } to { opacity: 1; } }
+@keyframes entryReveal { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .curtainClose, .curtainOpen { animation-duration: 0.01s; }
+}

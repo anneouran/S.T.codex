@@ -1,0 +1,505 @@
+@import "tailwindcss";
+
+:root {
+  --background: #e6f4fa;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* 余白や枠線を含めて幅を計算し、スマホでのはみ出しを防ぐ。 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+/* ノッチとホームバーを避けつつ、短い画面でもスクロールできる。 */
+.novel-page {
+  isolation: isolate;
+  /* 上下の操作エリアの高さ。スマホの安全領域は別途加算する。 */
+  --novel-header-height: 90px;
+  --novel-footer-height: 100px;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: calc(var(--novel-header-height) + env(safe-area-inset-top) + 16px)
+    max(20px, env(safe-area-inset-right))
+    calc(var(--novel-footer-height) + env(safe-area-inset-bottom) + 16px)
+    max(20px, env(safe-area-inset-left));
+}
+
+/* 画面の上下に常時固定する操作エリア。 */
+.novel-header,
+.novel-footer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding-inline: max(20px, env(safe-area-inset-left))
+    max(20px, env(safe-area-inset-right));
+  /* 透明な空き部分は、後から置く物語のタップ操作を遮らない。 */
+  pointer-events: none;
+}
+
+.novel-header {
+  /* ヘッダーの背景も暗転させ、戻るボタンだけを幕より前に出す。 */
+  z-index: auto;
+  top: 0;
+  height: calc(var(--novel-header-height) + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
+.novel-footer {
+  bottom: 0;
+  height: calc(var(--novel-footer-height) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  justify-content: flex-end;
+}
+
+.novel-header > *,
+.novel-footer > * {
+  pointer-events: auto;
+}
+
+.novel-content {
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.novel-content h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  line-height: 1.5;
+}
+
+/* 画面中央より少し下に置く、四角いセリフ欄。 */
+.dialogue-box {
+  position: fixed;
+  /* 基本は画面の上から53%。低い画面ではフッターの上に収める。 */
+  top: calc(min(53svh, calc(100svh - var(--novel-footer-height) - env(safe-area-inset-bottom) - 136px)) + 40px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  width: 100%;
+  max-width: 48rem;
+  min-height: 120px;
+  margin-inline: auto;
+  padding: 20px 24px 52px;
+  border-radius: 0;
+}
+
+/* 場所表示：透明な基準枠の左下、その外側にラベルを密着させる。 */
+.dialogue-box--location {
+  height: 120px;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.location-label {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 18px;
+  border-radius: 0;
+  background: #ffffff;
+  color: #1c3161;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.5;
+  animation: location-fade-in 2s ease-in-out both;
+}
+
+@keyframes location-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 本文表示の登場時は、名前欄・星も含めて0.5秒で現れる。 */
+.dialogue-box--narration,
+.dialogue-box--speech,
+.dialogue-box--protagonist {
+  animation: dialogue-fade-in 0.5s ease-in-out both;
+}
+
+.episode-page .dialogue-text {
+  max-height: max(60px, calc(47svh - var(--novel-footer-height) - env(safe-area-inset-bottom) - 116px));
+  overflow-y: auto;
+}
+
+.typewriter-line {
+  display: grid;
+}
+
+.typewriter-measure,
+.typewriter-visible {
+  grid-area: 1 / 1;
+}
+
+.typewriter-measure {
+  visibility: hidden;
+}
+
+.episode-page .story-next-button:disabled {
+  cursor: default;
+}
+
+.episode-load-error {
+  position: relative;
+  z-index: 260;
+  background: #ffffff;
+  color: #1c3161;
+  padding: 16px;
+}
+
+@keyframes dialogue-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 表示ルール：ナレーションは紺色のボックスに白文字。 */
+.dialogue-box--narration {
+  background: #1c3161;
+  color: #ffffff;
+}
+
+/* 表示ルール：セリフは白地に紺文字。名前欄は外側の右上に密着。 */
+.dialogue-box--speech,
+.dialogue-box--protagonist {
+  background: #ffffff;
+  color: #1c3161;
+}
+
+.dialogue-name {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 6px 18px;
+  border-radius: 0;
+  background: #1c3161;
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* 主人公はセリフと同じ配色で、名前欄だけ左上に置く。 */
+.dialogue-box--protagonist .dialogue-name {
+  left: 0;
+  right: auto;
+}
+
+.dialogue-box--speech .story-next-button:focus-visible,
+.dialogue-box--protagonist .story-next-button:focus-visible {
+  outline-color: #1c3161;
+}
+
+/* 星の画像の中心をセリフ欄の下辺に合わせる。 */
+.story-next-button {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.story-next-image {
+  display: block;
+  width: 36px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.story-next-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+/* 固定ヘッダーの中に配置する戻るボタン。 */
+.back-button {
+  position: relative;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  width: 94px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.back-button-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.back-button:focus-visible {
+  outline: 3px solid #1c3161;
+  outline-offset: 4px;
+}
+
+/* 黒い幕は全画面を覆う。戻るボタンの層（300）より下に置く。 */
+.scene-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.scene-curtain--dark {
+  opacity: 1;
+}
+
+.scene-curtain--active {
+  pointer-events: auto;
+}
+
+.transition-preview-button {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: 1px solid #1c3161;
+  background: #ffffff;
+  color: #1c3161;
+  cursor: pointer;
+}
+
+.transition-preview-button:disabled {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-curtain {
+    transition-duration: 0.01s;
+  }
+}
+
+/* 少し横に広げた背景を動かし、端に隙間が出ないようにする。 */
+.scene-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 12px);
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  animation: background-slide-left 2s ease-in-out both;
+}
+
+@keyframes background-slide-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-12px); }
+}
+
+/* 立ち絵は背景より手前、本文ボックスより奥に重ねる。 */
+.character-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-top: calc(var(--novel-header-height) + env(safe-area-inset-top));
+  padding-bottom: calc(var(--novel-footer-height) + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.character-image {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transform-origin: center bottom;
+  transform: translateY(390px) scale(1.575);
+  animation: character-fade-in 0.5s ease-in-out both;
+}
+
+@keyframes character-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 「立ち絵_子供」は子供用のサイズ・位置を使う。 */
+.character-image--child {
+  transform: translateY(210px) scale(0.95);
+}
+
+/* 選択肢：戻るボタン（300）を残して、全画面を黒70%で覆う。 */
+.choice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: grid;
+  place-items: center;
+  padding: max(20px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  background: rgb(0 0 0 / 0.7);
+}
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 48rem;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+/* 名前欄と同じ文字サイズ・余白。横幅はコンテンツ幅に揃える。 */
+.choice-button {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 0;
+  background: #1c3161;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.choice-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-background-image {
+    animation: none;
+    transform: translateX(-12px);
+  }
+  .location-label {
+    animation: none;
+    opacity: 1;
+  }
+  .character-image {
+    animation: none;
+    opacity: 1;
+  }
+  .dialogue-box--narration,
+  .dialogue-box--speech,
+  .dialogue-box--protagonist {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* 和文は明朝体、欧文はセリフ体。利用できる端末のフォントを順に使う。 */
+.dialogue-box,
+.choice-button {
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", "Times New Roman", serif;
+}
+
+/* 本文の文字間を少し広げる。 */
+.dialogue-text {
+  letter-spacing: 0.03em;
+}
+
+/* 少女の個別調整：直前の通常サイズから20%縮小、10px上へ。 */
+.character-image--girl {
+  transform: translateY(290px) scale(1.26);
+}
+
+/* 背景に重なるUIを、控えめな影で読み取りやすくする。 */
+.back-button-image {
+  filter: drop-shadow(0 3px 5px rgb(0 0 0 / 0.28));
+}
+
+.location-label,
+.dialogue-box--narration,
+.dialogue-box--speech,
+.dialogue-box--protagonist {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.22);
+}
+
+.dialogue-text {
+  font-size: 15px;
+}
+
+/* 名前欄は影なし。本文ボックスの影は維持する。 */
+.dialogue-name {
+  box-shadow: none;
+}
+
+/* エピソードの丸い戻るボタン。元のヘッダー位置と影は維持する。 */
+.back-button--round { width: 44px; height: 44px; }
+.back-button--round .back-button-image { width: 44px; height: 44px; }
+
+/* 固定要素の基準を中央のスマホ画面に揃える。 */
+html, body { background: #fff; }
+.site-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: 430px;
+  height: 100svh;
+  margin-inline: auto;
+  overflow: hidden;
+  transform: translateZ(0);
+  isolation: isolate;
+  background: var(--background);
+}
