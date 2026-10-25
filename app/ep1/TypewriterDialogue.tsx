@@ -54,6 +54,20 @@ export default function TypewriterDialogue({ kind, name, text, ended, onAdvance 
     onAdvance();
   }
 
+  // 星以外の画面タップも同じ処理へ。ボタン操作の伝播で二重に進めない。
+  useEffect(() => {
+    function screenTap(event: MouseEvent) {
+      if (!(event.target instanceof Element)) return;
+      const page = event.target.closest(".novel-page");
+      if (!page || event.target.closest("button, a, input, select, textarea, [role='button']")) return;
+      if (page.querySelector(".choice-overlay, .scene-curtain--active")) return;
+      if (ended && complete.current) return;
+      tap();
+    }
+    window.addEventListener("click", screenTap);
+    return () => window.removeEventListener("click", screenTap);
+  });
+
   const content = (
     <span className="typewriter-line">
       {/* 全文の高さを確保して、文字が増えても箱や星の位置を動かさない。 */}
