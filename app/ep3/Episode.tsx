@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/language";
 import BackButton from "../BackButton";
 import DialogueBox from "../DialogueBox";
 import TypewriterDialogue from "../ep1/TypewriterDialogue";
@@ -11,15 +12,16 @@ import styles from "./episode.module.css";
 type Phase = "loading" | "out" | "in" | "idle";
 const backgroundColor = (file: string) => file === "黒" ? "#000000" : file === "白" ? "#FFFFFF" : /^#[0-9a-f]{3,8}$/i.test(file) ? file : undefined;
 export const imageFiles: Record<string, string> = {
-  "training_room.png": "training-room-v2.png",
+  "training_room.png": "training-room-v3.png",
   "instructor.png": "scutarius.png",
   "scutarius.png": "scutarius.png",
-  "laetilia_training.png": "laetilia-training-v2.png",
-  "lucian_training.png": "lucian-training-v2.png",
+  "laetilia_training.png": "laetilia-training-v3.png",
+  "lucian_training.png": "lucian-training-v3.png",
 };
 const assetUrl = (file: string) => `/ep3/${imageFiles[file] ?? file}`;
 
 export default function Episode() {
+  const { t } = useLanguage("Ep.3 握手の手を離すタイミングって、難しい");
   const [index, setIndex] = useState(-1);
   const [phase, setPhase] = useState<Phase>("loading");
   const [error, setError] = useState(false);
@@ -128,16 +130,16 @@ export default function Episode() {
       </div>
       {portraits.map(({ file, leaving }) => (
         <div key={file} className="character-layer">
-          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt="立ち絵" />
+          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt={t("立ち絵")} />
         </div>
       ))}
-      <main className="novel-content" aria-label="Ep.3 握手の手を離すタイミングって、難しい">
+      <main className="novel-content" aria-label={t("Ep.3 握手の手を離すタイミングって、難しい")}>
         {frame?.kind === "location" ? (
           <DialogueBox key={`location:${index}`} kind="location" locationName={frame.text} />
         ) : frame && showText && (
           <TypewriterDialogue key={index} kind={frame.kind} name={frame.name} text={frame.text} ended={false} onAdvance={next} />
         )}
-        {error && <p className="episode-load-error" role="alert">画像を読み込めませんでした。ページを再読み込みしてください。</p>}
+        {error && <p className="episode-load-error" role="alert">{t("画像を読み込めませんでした。ページを再読み込みしてください。")}</p>}
       </main>
       <footer className="novel-footer" />
       <div className={`scene-curtain${phase === "loading" || phase === "out" ? " scene-curtain--dark" : ""}${phase !== "idle" ? " scene-curtain--active" : ""}`} aria-hidden="true" />

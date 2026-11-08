@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/language";
 import BackButton from "../BackButton";
 import CharacterPortrait from "../CharacterPortrait";
 import DialogueBox from "../DialogueBox";
@@ -9,9 +10,10 @@ import TypewriterDialogue from "./TypewriterDialogue";
 import { returnToStory } from "../returnToStory";
 
 type Phase = "loading" | "out" | "in" | "idle" | "finished";
-const assetUrl = (file: string) => `/ep1/${file === "village_night.png" ? "village-night-v2.png" : file === "attic_night.png" ? "attic-night-v2.png" : file}`;
+const assetUrl = (file: string) => `/ep1/${file === "village_night.png" ? "village-night-v3.png" : file === "attic_night.png" ? "attic-night-v3.png" : file}`;
 
 export default function EpisodeOne() {
+  const { t } = useLanguage("Ep.0_プロローグ");
   const [index, setIndex] = useState(-1);
   const [phase, setPhase] = useState<Phase>("loading");
   const [error, setError] = useState(false);
@@ -137,7 +139,7 @@ export default function EpisodeOne() {
           <img key={frame.background} className="scene-background-image" src={assetUrl(frame.background)} alt="" />
         )}
       </div>
-      <main className="novel-content" aria-label="Ep.0_プロローグ">
+      <main className="novel-content" aria-label={t("Ep.0_プロローグ")}>
         {frame?.portrait && (
           <CharacterPortrait src={assetUrl(frame.portrait.file)} variant={frame.portrait.variant} />
         )}
@@ -146,7 +148,7 @@ export default function EpisodeOne() {
         ) : frame && showText && (
           <TypewriterDialogue key={`text:${index}`} kind={frame.kind} name={frame.name} text={frame.text} ended={ended} onAdvance={next} />
         )}
-        {error && <p className="episode-load-error" role="alert">画像を読み込めませんでした。ページを再読み込みしてください。</p>}
+        {error && <p className="episode-load-error" role="alert">{t("画像を読み込めませんでした。ページを再読み込みしてください。")}</p>}
       </main>
       <footer className="novel-footer" />
       <div className={`scene-curtain${phase === "loading" || phase === "out" || phase === "finished" ? " scene-curtain--dark" : ""}${phase !== "idle" ? " scene-curtain--active" : ""}`} aria-hidden="true" />

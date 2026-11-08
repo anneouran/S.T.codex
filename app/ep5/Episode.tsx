@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/language";
 import BackButton from "../BackButton";
 import DialogueBox from "../DialogueBox";
 import TypewriterDialogue from "../ep1/TypewriterDialogue";
@@ -12,17 +13,18 @@ import styles from "./episode.module.css";
 type Phase = "loading" | "out" | "in" | "idle";
 const backgroundColor = (file: string) => file === "黒" ? "#000000" : file === "白" ? "#FFFFFF" : /^#[0-9a-f]{3,8}$/i.test(file) ? file : undefined;
 const imageFiles: Record<string, string> = {
-  "Clara_private.png": "clara.png",
-  "laetilia_apron.png": "laetilia-apron-v2.png",
-  "laetilia_private.png": "laetilia-private-v2.png",
-  "dormitory_room.png": "dormitory-room-v2.png",
-  "dormitory_room2.png": "dormitory-dining-v2.png",
-  "shop_gelato.png": "shop-gelato-v2.png",
+  "Clara_private.png": "clara-v2.png",
+  "laetilia_apron.png": "laetilia-apron-v3.png",
+  "laetilia_private.png": "laetilia-private-v3.png",
+  "dormitory_room.png": "dormitory-room-v3.png",
+  "dormitory_room2.png": "dormitory-dining-v3.png",
+  "shop_gelato.png": "shop-gelato-v3.png",
 };
 const assetUrl = (file: string) => `/ep5/${imageFiles[file] ?? file}`;
 
 export default function Episode() {
   const [frames, setFrames] = useState(routes["1"]);
+  const { t } = useLanguage("Ep.5 ゴシップは、ジェラートより甘い");
   const [index, setIndex] = useState(-1);
   const [phase, setPhase] = useState<Phase>("loading");
   const [error, setError] = useState(false);
@@ -140,16 +142,16 @@ export default function Episode() {
       </div>
       {portraits.map(({ file, leaving }) => (
         <div key={file} className="character-layer">
-          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt="立ち絵" />
+          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt={t("立ち絵")} />
         </div>
       ))}
-      <main className="novel-content" aria-label="Ep.5 ゴシップは、ジェラートより甘い">
+      <main className="novel-content" aria-label={t("Ep.5 ゴシップは、ジェラートより甘い")}>
         {frame?.kind === "location" ? (
           <div className={frame.reversePan ? styles.locationSlide : undefined}><DialogueBox key={`location:${index}`} kind="location" locationName={frame.text} /></div>
         ) : frame && showText && (
           <TypewriterDialogue key={index} kind={frame.kind} name={frame.name} text={frame.text} ended={false} onAdvance={next} />
         )}
-        {error && <p className="episode-load-error" role="alert">画像を読み込めませんでした。ページを再読み込みしてください。</p>}
+        {error && <p className="episode-load-error" role="alert">{t("画像を読み込めませんでした。ページを再読み込みしてください。")}</p>}
       </main>
       {frame?.choice && phase === "idle" && !exiting.current && <ChoiceOverlay choices={choices} onSelect={selectChoice} />}
       <footer className="novel-footer" />

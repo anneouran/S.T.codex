@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/language";
 import DialogueBox from "../DialogueBox";
 import type { TextKind } from "./scenario";
 
@@ -12,7 +13,9 @@ type Props = {
   onAdvance: () => void;
 };
 
-export default function TypewriterDialogue({ kind, name, text, ended, onAdvance }: Props) {
+export default function TypewriterDialogue({ kind, name, text: sourceText, ended, onAdvance }: Props) {
+  const { t } = useLanguage();
+  const text = t(sourceText);
   const characters = Array.from(text);
   const [count, setCount] = useState(0);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);

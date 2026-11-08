@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "S.T.",
-  description: "全5話のノベルゲーム",
+  description: "オリジナルノベルゲーム",
 };
 
 export const viewport: Viewport = {

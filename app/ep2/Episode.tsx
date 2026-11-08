@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/language";
 import BackButton from "../BackButton";
 import DialogueBox from "../DialogueBox";
 import TypewriterDialogue from "../ep1/TypewriterDialogue";
@@ -11,10 +12,11 @@ import styles from "./episode.module.css";
 
 type Phase = "loading" | "out" | "in" | "idle";
 const backgroundColor = (file: string) => file === "黒" ? "#000000" : file === "白" ? "#FFFFFF" : /^#[0-9a-f]{3,8}$/i.test(file) ? file : undefined;
-const assetUrl = (file: string) => `/ep2/${file === "Carcordis_ExecutionDivisionBase.png" ? "lounge-v2.png" : file === "laetilia.png" ? "laetilia-v2.png" : file}`;
+const assetUrl = (file: string) => `/ep2/${file === "Carcordis_ExecutionDivisionBase.png" ? "lounge-v3.png" : file === "laetilia.png" ? "laetilia-v3.png" : file}`;
 
 export default function Episode() {
   const [frames, setFrames] = useState(routes["1"]);
+  const { t } = useLanguage("Ep.2 ご飯は食べないと体に良くない");
   const [index, setIndex] = useState(-1);
   const [phase, setPhase] = useState<Phase>("loading");
   const [error, setError] = useState(false);
@@ -130,16 +132,16 @@ export default function Episode() {
       </div>
       {portraits.map(({ file, leaving }) => (
         <div key={file} className="character-layer">
-          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt="立ち絵" />
+          <img className={`character-image character-image--adult ${styles.portrait} ${leaving ? styles.leaving : ""}`} src={assetUrl(file)} alt={t("立ち絵")} />
         </div>
       ))}
-      <main className="novel-content" aria-label="Ep.2 ご飯は食べないと体に良くない">
+      <main className="novel-content" aria-label={t("Ep.2 ご飯は食べないと体に良くない")}>
         {frame?.kind === "location" ? (
           <DialogueBox key={`location:${index}`} kind="location" locationName={frame.text} />
         ) : frame && showText && (
           <TypewriterDialogue key={index} kind={frame.kind} name={frame.name} text={frame.text} ended={false} onAdvance={next} />
         )}
-        {error && <p className="episode-load-error" role="alert">画像を読み込めませんでした。ページを再読み込みしてください。</p>}
+        {error && <p className="episode-load-error" role="alert">{t("画像を読み込めませんでした。ページを再読み込みしてください。")}</p>}
       </main>
       {frame?.choice && phase === "idle" && !exiting.current && <ChoiceOverlay choices={choices} onSelect={selectChoice} />}
       <footer className="novel-footer" />

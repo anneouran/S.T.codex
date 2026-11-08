@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { LocalizedText, LocalizedSection, LocalizedImage } from "../i18n/language";
 import styles from "./title.module.css";
 import CharacterCarousel from "./CharacterCarousel";
 import EpisodeList from "./EpisodeList";
 import SectionMenu from "./SectionMenu";
+import CreditText from "./CreditText";
 import TitleEntry from "./TitleEntry";
 
 export const metadata: Metadata = { title: "S.T.codex" };
@@ -34,8 +36,8 @@ export default function TitlePage() {
   return (
     <TitleEntry>
     <main className={styles.page}>
-      <section className={styles.titleSection} aria-label="タイトル">
-      <img
+      <LocalizedSection className={styles.titleSection} aria-label="タイトル">
+      <LocalizedImage
         className={styles.illustration}
         src="/title-illustration.png"
         alt="S.T.codex 遊べるウェブサイト"
@@ -43,11 +45,11 @@ export default function TitlePage() {
         height={4306}
         fetchPriority="high"
       />
-      </section>
-      <section id="introduction" tabIndex={-1} className={styles.storySection} aria-label="イントロダクション">
+      </LocalizedSection>
+      <LocalizedSection id="introduction" tabIndex={-1} className={styles.storySection} aria-label="イントロダクション">
         <div className={styles.storyContent}>
           <div className={styles.headingFrame}>
-          <img
+          <LocalizedImage
             className={styles.sectionHeading}
             src="/introduction-heading.png?v=2"
             alt=""
@@ -55,38 +57,46 @@ export default function TitlePage() {
             height={775}
           />
           </div>
-          <p className={styles.storyText}>{storyText}</p>
+            <p className={styles.storyText}><LocalizedText text={storyText} /></p>
         </div>
-      </section>
-      <section id="characters" tabIndex={-1} className={styles.characterSection} aria-label="キャラクター紹介">
+      </LocalizedSection>
+      <LocalizedSection id="characters" tabIndex={-1} className={styles.characterSection} aria-label="キャラクター紹介">
         <div className={styles.characterContent}>
           <div className={styles.headingFrame}>
-            <img className={styles.sectionHeading} src="/character-heading.png?v=2" alt="キャラクター" width={2985} height={775} />
+            <LocalizedImage className={styles.sectionHeading} src="/character-heading.png?v=2" alt="キャラクター" width={2985} height={775} />
           </div>
           <CharacterCarousel />
         </div>
-      </section>
-      <section id="story" tabIndex={-1} className={styles.episodesSection} aria-label="Story エピソード一覧">
+      </LocalizedSection>
+      <LocalizedSection id="story" tabIndex={-1} className={styles.episodesSection} aria-label="Story エピソード一覧">
         <div className={styles.episodesContent}>
           <div className={styles.headingFrame}>
-            <img className={styles.sectionHeading} src="/story-heading.png?v=2" alt="ストーリー" width={2343} height={775} />
+            <LocalizedImage className={styles.sectionHeading} src="/story-heading.png?v=2" alt="ストーリー" width={2343} height={775} />
           </div>
           <EpisodeList />
         </div>
-      </section>
-      <section id="sns" tabIndex={-1} className={styles.snsSection} aria-label="SNS">
+      </LocalizedSection>
+      <LocalizedSection id="sns" tabIndex={-1} className={styles.snsSection} aria-label="SNS">
         <div className={styles.snsContent}>
           <div className={styles.headingFrame}>
-            <img className={styles.sectionHeading} src="/sns-heading.png?v=2" alt="SNS" width={2184} height={775} />
+            <LocalizedImage className={styles.sectionHeading} src="/sns-heading.png?v=2" alt="SNS" width={2184} height={775} />
           </div>
           <div className={styles.snsBody}>
             <a className={styles.instagramLink} href="https://www.instagram.com/s.t.codex/" target="_blank" rel="noopener noreferrer">
-              <img className={styles.instagramQr} src="/instagram-qr.png?v=2" alt="Instagram @s.t.codex のQRコード" width={492} height={492} />
+              <LocalizedImage className={styles.instagramCard} src="/instagram-card-v3.png" alt="Instagram @s.t.codex のQRコード" width={1454} height={1837} />
             </a>
           </div>
         </div>
+      </LocalizedSection>
+      <LocalizedSection id="credits" tabIndex={-1} className={`${styles.storySection} ${styles.creditsSection}`} aria-label="制作クレジット">
+        <div className={styles.storyContent}>
+          <div className={styles.headingFrame}>
+            <LocalizedImage className={styles.sectionHeading} src="/credit-heading.png" alt="Credit" width={2495} height={775} />
+          </div>
+          <CreditText />
+        </div>
         <footer className={styles.snsCopyright}>© S.T.codex</footer>
-      </section>
+      </LocalizedSection>
       <SectionMenu />
       <footer className={styles.footer} />
     </main>

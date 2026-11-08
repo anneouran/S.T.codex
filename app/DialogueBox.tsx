@@ -1,3 +1,6 @@
+"use client";
+
+import { useLanguage } from "./i18n/language";
 import type { ReactNode } from "react";
 
 // セリフ・主人公には名前を指定する。ナレーションには名前欄を出さない。
@@ -13,11 +16,12 @@ type DialogueBoxProps = {
 );
 
 export default function DialogueBox(props: DialogueBoxProps) {
+  const { t } = useLanguage();
   // 場所表示のときは、本文・キャラクター名・星を描画しない。
   if (props.kind === "location") {
     return (
-      <section className="dialogue-box dialogue-box--location" aria-label="場所表示">
-        <div key={props.locationName} className="location-label">{props.locationName}</div>
+      <section className="dialogue-box dialogue-box--location" aria-label={t("場所表示")}>
+        <div key={props.locationName} className="location-label">{t(props.locationName)}</div>
       </section>
     );
   }
@@ -25,13 +29,13 @@ export default function DialogueBox(props: DialogueBoxProps) {
   return (
     <section
       className={`dialogue-box dialogue-box--${props.kind}`}
-      aria-label={props.kind === "narration" ? "ナレーション" : props.kind === "protagonist" ? "主人公のセリフ" : "セリフ"}
+      aria-label={t(props.kind === "narration" ? "ナレーション" : props.kind === "protagonist" ? "主人公のセリフ" : "セリフ")}
     >
       {props.kind !== "narration" && (
-        <div className="dialogue-name">{props.characterName}</div>
+        <div className="dialogue-name">{t(props.characterName)}</div>
       )}
       <div className="dialogue-text">{props.children}</div>
-      <button type="button" className="story-next-button" aria-label="物語を進める" onClick={props.onNext} disabled={props.nextDisabled}>
+      <button type="button" className="story-next-button" aria-label={t("物語を進める")} onClick={props.onNext} disabled={props.nextDisabled}>
         <img src="/button-star.svg" alt="" className="story-next-image" />
       </button>
     </section>

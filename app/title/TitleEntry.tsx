@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
+import { useLanguage } from "../i18n/language";
 import LoadingScreen from "../LoadingScreen";
 import { storyReturnKey } from "../returnToStory";
 import styles from "../page.module.css";
@@ -8,6 +9,7 @@ import styles from "../page.module.css";
 type Phase = "checking" | "returning" | "loading" | "darkening" | "revealing" | "ready";
 
 export default function TitleEntry({ children }: { children: ReactNode }) {
+  useLanguage("S.T.codex");
   const [phase, setPhase] = useState<Phase>("checking");
   useEffect(() => {
     const returning = sessionStorage.getItem(storyReturnKey) === "story";
